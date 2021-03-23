@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.jake.bloodp";
+option java_outer_classname = "BloodpServiceImpl";
+
+package grpcheart;
+
+service Bloodp{
+	
+	rpc BloodpCalculation(BloodpRequest) returns (BloodpReply);
+	rpc BloodpAdvice(Empty) returns (BloodpAnswer);
+	
+}
+
+message BloodpRequest {
+	int32 systolic = 1;
+	int32 diastolic = 2;	
+}
+
+message BloodpReply {
+	string bp = 1;
+	string bpmessage = 2;
+}
+
+message Empty {
+	
+}
+
+message BloodpAnswer {
+	string helplink1 = 3;
+	string helplink2 = 4;
+}

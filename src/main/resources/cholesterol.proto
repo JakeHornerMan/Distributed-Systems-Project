@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.jake.cholesterol";
+option java_outer_classname = "CholesterolServiceImpl";
+
+package grpcheart;
+
+service Cholesterol{
+
+	rpc CholesterolCalculation(CholesterolRequest) returns (CholesterolReply);
+	
+	rpc	CholesterolAdvice(Empty) returns (CholesterolAnswer);
+	
+}
+
+message CholesterolRequest{
+	int32 total = 1;
+	int32 ldl = 2;
+	int32 hdl = 3;
+	int32 Triglycerides = 4;
+}
+
+message CholesterolReply{
+	string total = 1;
+	string ansldl = 2;
+	string anshdl = 3;
+	string anstri = 4;
+}
+
+message Empty{
+
+}
+
+message CholesterolAnswer{
+	string helplink1 = 1;
+	string helplink2 = 2;
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.jake.bmi";
+option java_outer_classname = "BmiServiceImpl";
+
+package grpcheart;
+
+service BMI{
+	
+	rpc bmiCalculation(BmiRequest) returns (BmiReply);
+	rpc bmiAdvice(Empty) returns (BmiAdvice);
+	
+}
+
+message BmiRequest {
+	float height = 1;
+	float weight = 2;
+	
+}
+
+message BmiReply {
+	float bmi = 1;
+	string bmimessage = 2;	
+}
+
+message Empty {
+
+}
+
+message BmiAdvice {
+	string link1 = 1;
+	string link2 = 2;
+}
