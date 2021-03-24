@@ -11,18 +11,15 @@ import javax.jmdns.ServiceListener;
 
 import grpc.jake.bloodp.BloodpAnswer;
 import grpc.jake.bloodp.BloodpGrpc;
-import grpc.jake.bloodp.BloodpRequest;
 import grpc.jake.bloodp.BloodpGrpc.BloodpBlockingStub;
-import grpc.jake.bmi.BMIGrpc;
+import grpc.jake.bloodp.BloodpReply;
+import grpc.jake.bloodp.BloodpRequest;
+import grpc.jake.bloodp.Empty;
 import grpc.jake.bmi.BMIGrpc.BMIBlockingStub;
-import grpc.jake.bmi.BmiAdvice;
-import grpc.jake.bmi.BmiReply;
-import grpc.jake.bmi.BmiRequest;
-import grpc.jake.bmi.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-public class BmiClient {
+public class BloodpClient {
 	
 	private static class MyServiceListener implements ServiceListener{
 
@@ -48,8 +45,8 @@ public class BmiClient {
 			System.out.println("comp.name "+ serviceinfo.getServer().replace(".local.", ""));
 			System.out.println("desc/propertys "+ serviceinfo.getNiceTextString());
 			
-			getbmiCalculation(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
-			getbmiAdvice(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
+			getBloodpCalculation(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
+			getBloodpAdvice(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
 		}
 		
 	}
@@ -62,7 +59,7 @@ public class BmiClient {
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 			
 			//discover service based on service type
-			String service_type = "_bmi._tcp.local.";
+			String service_type = "_bloodp._tcp.local.";
 			
 			//i need to listen for services added/removed etc
 			jmdns.addServiceListener(service_type, new MyServiceListener());
@@ -82,34 +79,38 @@ public class BmiClient {
 			e.printStackTrace();
 		}
 	}
-
-	public static void getbmiCalculation(String host, int port) {
+	
+	//RPC CALL
+	public static void getBloodpCalculation(String host, int port) {
 		
 		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
 		
-		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
+		BloodpBlockingStub blockingStub = BloodpGrpc.newBlockingStub(channel);
 		
-		BmiRequest request = BmiRequest.newBuilder().setHeight(1.70f).setWeight(67.0f).build();
+		//prepare request
+		BloodpRequest request = BloodpRequest.newBuilder().setSystolic(140).setDiastolic(90).build();
 		
-		BmiReply response = blockingStub.bmiCalculation(request);
+		BloodpReply response = blockingStub.bloodpCalculation(request);
 		
-		System.out.println("BMI: "+response.getBmi());
-		System.out.println("Fitness Condition: "+response.getBmimessage());
+		System.out.println("Blood Pressure: "+response.getBp());
+		System.out.println("Blood Pressure Condition: "+response.getBpmessage());
 		
 	}
 	
-	public static void getbmiAdvice(String host, int port) {
-		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
-		
-		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
-		
-		Empty request = Empty.newBuilder().build();
-		
-		BmiAdvice response = blockingStub.bmiAdvice(request);
-		
-		System.out.println("BMI: "+response.getLink1());
-		System.out.println("Fitness Condition: "+response.getLink2());
-		
+	public static void getBloodpAdvice(String host, int port) {
+			
+			ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
+			
+			BloodpBlockingStub blockingStub = BloodpGrpc.newBlockingStub(channel);
+			
+			//prepare request
+			Empty request = Empty.newBuilder().build();
+			
+			BloodpAnswer response = blockingStub.bloodpAdvice(request);
+			
+			System.out.println("Read more about blood pressure: "+response.getHelplink1());
+			System.out.println("Relavent Read for your condition: "+response.getHelplink2());
+			
 	}
+
 }

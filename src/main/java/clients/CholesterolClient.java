@@ -10,19 +10,16 @@ import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
 import grpc.jake.bloodp.BloodpAnswer;
-import grpc.jake.bloodp.BloodpGrpc;
-import grpc.jake.bloodp.BloodpRequest;
-import grpc.jake.bloodp.BloodpGrpc.BloodpBlockingStub;
-import grpc.jake.bmi.BMIGrpc;
-import grpc.jake.bmi.BMIGrpc.BMIBlockingStub;
-import grpc.jake.bmi.BmiAdvice;
-import grpc.jake.bmi.BmiReply;
-import grpc.jake.bmi.BmiRequest;
-import grpc.jake.bmi.Empty;
+import grpc.jake.cholesterol.CholesterolAnswer;
+import grpc.jake.cholesterol.CholesterolGrpc;
+import grpc.jake.cholesterol.CholesterolGrpc.CholesterolBlockingStub;
+import grpc.jake.cholesterol.CholesterolReply;
+import grpc.jake.cholesterol.CholesterolRequest;
+import grpc.jake.cholesterol.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-public class BmiClient {
+public class CholesterolClient {
 	
 	private static class MyServiceListener implements ServiceListener{
 
@@ -48,8 +45,8 @@ public class BmiClient {
 			System.out.println("comp.name "+ serviceinfo.getServer().replace(".local.", ""));
 			System.out.println("desc/propertys "+ serviceinfo.getNiceTextString());
 			
-			getbmiCalculation(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
-			getbmiAdvice(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
+			getCholesterolCalculation(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
+			getCholesterolAdvice(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
 		}
 		
 	}
@@ -62,7 +59,7 @@ public class BmiClient {
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 			
 			//discover service based on service type
-			String service_type = "_bmi._tcp.local.";
+			String service_type = "_cholesterol._tcp.local.";
 			
 			//i need to listen for services added/removed etc
 			jmdns.addServiceListener(service_type, new MyServiceListener());
@@ -82,34 +79,36 @@ public class BmiClient {
 			e.printStackTrace();
 		}
 	}
-
-	public static void getbmiCalculation(String host, int port) {
+	
+	public static void getCholesterolCalculation(String host, int port) {
 		
 		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
 		
-		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
+		CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
 		
-		BmiRequest request = BmiRequest.newBuilder().setHeight(1.70f).setWeight(67.0f).build();
+		CholesterolRequest request = CholesterolRequest.newBuilder().setTotal(10).setLdl(10).setHdl(10).setTriglycerides(10).build();
 		
-		BmiReply response = blockingStub.bmiCalculation(request);
+		CholesterolReply response = blockingStub.cholesterolCalculation(request);
 		
-		System.out.println("BMI: "+response.getBmi());
-		System.out.println("Fitness Condition: "+response.getBmimessage());
+		System.out.println(response.getTotal());
+		System.out.println(response.getAnsldl());
+		System.out.println(response.getAnshdl());
+		System.out.println(response.getAnstri());
 		
 	}
 	
-	public static void getbmiAdvice(String host, int port) {
+	public static void getCholesterolAdvice(String host, int port) {
 		
 		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
 		
-		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
+		CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
 		
 		Empty request = Empty.newBuilder().build();
 		
-		BmiAdvice response = blockingStub.bmiAdvice(request);
+		CholesterolAnswer response = blockingStub.cholesterolAdvice(request);
 		
-		System.out.println("BMI: "+response.getLink1());
-		System.out.println("Fitness Condition: "+response.getLink2());
-		
+		System.out.println("Read more about Cholesterol: "+response.getHelplink1());
+		System.out.println("Relavent reading for your condition: "+response.getHelplink2());
 	}
+
 }
