@@ -9,6 +9,8 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
+import Interface.HeartDiseaseGUI;
+import classes.BmiOutput;
 import grpc.jake.bloodp.BloodpAnswer;
 import grpc.jake.bloodp.BloodpGrpc;
 import grpc.jake.bloodp.BloodpRequest;
@@ -23,6 +25,13 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 public class BmiClient {
+	
+	private static String bmi;
+	private static String bmiCondition;
+	private static String link1;
+	private static String link2;
+	
+	public static BmiOutput bmians = new BmiOutput();
 	
 	private static class MyServiceListener implements ServiceListener{
 
@@ -50,6 +59,7 @@ public class BmiClient {
 			
 			getbmiCalculation(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
 			getbmiAdvice(serviceinfo.getHostAddresses()[0],serviceinfo.getPort());
+			
 		}
 		
 	}
@@ -89,13 +99,19 @@ public class BmiClient {
 		
 		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
 		
-		BmiRequest request = BmiRequest.newBuilder().setHeight(1.70f).setWeight(67.0f).build();
+		
+		BmiRequest request = BmiRequest.newBuilder().setHeight(1.35f).setWeight(36.7f).build();
 		
 		BmiReply response = blockingStub.bmiCalculation(request);
 		
 		System.out.println("BMI: "+response.getBmi());
 		System.out.println("Fitness Condition: "+response.getBmimessage());
 		
+		bmi = String.valueOf(response.getBmi());
+		bmiCondition = response.getBmimessage();
+		
+		bmians.setBmitotalvalue(bmi);
+		bmians.setBmiconditionvalue(bmiCondition);
 	}
 	
 	public static void getbmiAdvice(String host, int port) {
@@ -111,5 +127,14 @@ public class BmiClient {
 		System.out.println("BMI: "+response.getLink1());
 		System.out.println("Fitness Condition: "+response.getLink2());
 		
+		link1 = response.getLink1().toString();
+		link2 = response.getLink2().toString();
+		
+		bmians.setBmihelplink1value(link1);
+		bmians.setBmihelplink1value(link2);
+	}
+	
+	public BmiOutput takeoutput() {
+		return bmians;
 	}
 }

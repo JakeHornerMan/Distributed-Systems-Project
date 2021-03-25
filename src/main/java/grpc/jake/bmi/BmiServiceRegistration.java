@@ -31,8 +31,8 @@ public class BmiServiceRegistration {
 			
 			System.out.println("\n unregistering services");
 			//unregister services
-			jmdns.unregisterAllServices();
-			System.out.println("\n unregistering completed");
+			//jmdns.unregisterAllServices();
+			//System.out.println("\n unregistering completed");
 			
 			Thread.sleep(10000);
 			
