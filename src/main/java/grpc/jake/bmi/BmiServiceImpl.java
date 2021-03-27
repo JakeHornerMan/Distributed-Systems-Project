@@ -44,8 +44,8 @@ public final class BmiServiceImpl {
   static {
     java.lang.String[] descriptorData = {
       "\n\tbmi.proto\022\tgrpcheart\",\n\nBmiRequest\022\016\n\006" +
-      "height\030\001 \001(\002\022\016\n\006weight\030\002 \001(\002\"+\n\010BmiReply" +
-      "\022\013\n\003bmi\030\001 \001(\002\022\022\n\nbmimessage\030\002 \001(\t\"\007\n\005Emp" +
+      "height\030\001 \001(\001\022\016\n\006weight\030\002 \001(\001\"+\n\010BmiReply" +
+      "\022\013\n\003bmi\030\001 \001(\001\022\022\n\nbmimessage\030\002 \001(\t\"\007\n\005Emp" +
       "ty\")\n\tBmiAdvice\022\r\n\005link1\030\001 \001(\t\022\r\n\005link2\030" +
       "\002 \001(\t2x\n\003BMI\022<\n\016bmiCalculation\022\025.grpchea" +
       "rt.BmiRequest\032\023.grpcheart.BmiReply\0223\n\tbm" +

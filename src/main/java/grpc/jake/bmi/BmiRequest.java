@@ -16,8 +16,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private BmiRequest() {
-    height_ = 0F;
-    weight_ = 0F;
+    height_ = 0D;
+    weight_ = 0D;
   }
 
   @java.lang.Override
@@ -44,14 +44,14 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 13: {
+          case 9: {
 
-            height_ = input.readFloat();
+            height_ = input.readDouble();
             break;
           }
-          case 21: {
+          case 17: {
 
-            weight_ = input.readFloat();
+            weight_ = input.readDouble();
             break;
           }
           default: {
@@ -87,20 +87,20 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int HEIGHT_FIELD_NUMBER = 1;
-  private float height_;
+  private double height_;
   /**
-   * <code>float height = 1;</code>
+   * <code>double height = 1;</code>
    */
-  public float getHeight() {
+  public double getHeight() {
     return height_;
   }
 
   public static final int WEIGHT_FIELD_NUMBER = 2;
-  private float weight_;
+  private double weight_;
   /**
-   * <code>float weight = 2;</code>
+   * <code>double weight = 2;</code>
    */
-  public float getWeight() {
+  public double getWeight() {
     return weight_;
   }
 
@@ -118,11 +118,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (height_ != 0F) {
-      output.writeFloat(1, height_);
+    if (height_ != 0D) {
+      output.writeDouble(1, height_);
     }
-    if (weight_ != 0F) {
-      output.writeFloat(2, weight_);
+    if (weight_ != 0D) {
+      output.writeDouble(2, weight_);
     }
     unknownFields.writeTo(output);
   }
@@ -133,13 +133,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (height_ != 0F) {
+    if (height_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(1, height_);
+        .computeDoubleSize(1, height_);
     }
-    if (weight_ != 0F) {
+    if (weight_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(2, weight_);
+        .computeDoubleSize(2, weight_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -158,12 +158,12 @@ private static final long serialVersionUID = 0L;
 
     boolean result = true;
     result = result && (
-        java.lang.Float.floatToIntBits(getHeight())
-        == java.lang.Float.floatToIntBits(
+        java.lang.Double.doubleToLongBits(getHeight())
+        == java.lang.Double.doubleToLongBits(
             other.getHeight()));
     result = result && (
-        java.lang.Float.floatToIntBits(getWeight())
-        == java.lang.Float.floatToIntBits(
+        java.lang.Double.doubleToLongBits(getWeight())
+        == java.lang.Double.doubleToLongBits(
             other.getWeight()));
     result = result && unknownFields.equals(other.unknownFields);
     return result;
@@ -177,11 +177,11 @@ private static final long serialVersionUID = 0L;
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
-    hash = (53 * hash) + java.lang.Float.floatToIntBits(
-        getHeight());
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getHeight()));
     hash = (37 * hash) + WEIGHT_FIELD_NUMBER;
-    hash = (53 * hash) + java.lang.Float.floatToIntBits(
-        getWeight());
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getWeight()));
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -315,9 +315,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      height_ = 0F;
+      height_ = 0D;
 
-      weight_ = 0F;
+      weight_ = 0D;
 
       return this;
     }
@@ -395,10 +395,10 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(grpc.jake.bmi.BmiRequest other) {
       if (other == grpc.jake.bmi.BmiRequest.getDefaultInstance()) return this;
-      if (other.getHeight() != 0F) {
+      if (other.getHeight() != 0D) {
         setHeight(other.getHeight());
       }
-      if (other.getWeight() != 0F) {
+      if (other.getWeight() != 0D) {
         setWeight(other.getWeight());
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -430,54 +430,54 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private float height_ ;
+    private double height_ ;
     /**
-     * <code>float height = 1;</code>
+     * <code>double height = 1;</code>
      */
-    public float getHeight() {
+    public double getHeight() {
       return height_;
     }
     /**
-     * <code>float height = 1;</code>
+     * <code>double height = 1;</code>
      */
-    public Builder setHeight(float value) {
+    public Builder setHeight(double value) {
       
       height_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>float height = 1;</code>
+     * <code>double height = 1;</code>
      */
     public Builder clearHeight() {
       
-      height_ = 0F;
+      height_ = 0D;
       onChanged();
       return this;
     }
 
-    private float weight_ ;
+    private double weight_ ;
     /**
-     * <code>float weight = 2;</code>
+     * <code>double weight = 2;</code>
      */
-    public float getWeight() {
+    public double getWeight() {
       return weight_;
     }
     /**
-     * <code>float weight = 2;</code>
+     * <code>double weight = 2;</code>
      */
-    public Builder setWeight(float value) {
+    public Builder setWeight(double value) {
       
       weight_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>float weight = 2;</code>
+     * <code>double weight = 2;</code>
      */
     public Builder clearWeight() {
       
-      weight_ = 0F;
+      weight_ = 0D;
       onChanged();
       return this;
     }

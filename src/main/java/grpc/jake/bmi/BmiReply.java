@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private BmiReply() {
-    bmi_ = 0F;
+    bmi_ = 0D;
     bmimessage_ = "";
   }
 
@@ -44,9 +44,9 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 13: {
+          case 9: {
 
-            bmi_ = input.readFloat();
+            bmi_ = input.readDouble();
             break;
           }
           case 18: {
@@ -88,11 +88,11 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int BMI_FIELD_NUMBER = 1;
-  private float bmi_;
+  private double bmi_;
   /**
-   * <code>float bmi = 1;</code>
+   * <code>double bmi = 1;</code>
    */
-  public float getBmi() {
+  public double getBmi() {
     return bmi_;
   }
 
@@ -144,8 +144,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (bmi_ != 0F) {
-      output.writeFloat(1, bmi_);
+    if (bmi_ != 0D) {
+      output.writeDouble(1, bmi_);
     }
     if (!getBmimessageBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, bmimessage_);
@@ -159,9 +159,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (bmi_ != 0F) {
+    if (bmi_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(1, bmi_);
+        .computeDoubleSize(1, bmi_);
     }
     if (!getBmimessageBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, bmimessage_);
@@ -183,8 +183,8 @@ private static final long serialVersionUID = 0L;
 
     boolean result = true;
     result = result && (
-        java.lang.Float.floatToIntBits(getBmi())
-        == java.lang.Float.floatToIntBits(
+        java.lang.Double.doubleToLongBits(getBmi())
+        == java.lang.Double.doubleToLongBits(
             other.getBmi()));
     result = result && getBmimessage()
         .equals(other.getBmimessage());
@@ -200,8 +200,8 @@ private static final long serialVersionUID = 0L;
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + BMI_FIELD_NUMBER;
-    hash = (53 * hash) + java.lang.Float.floatToIntBits(
-        getBmi());
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getBmi()));
     hash = (37 * hash) + BMIMESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getBmimessage().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -337,7 +337,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      bmi_ = 0F;
+      bmi_ = 0D;
 
       bmimessage_ = "";
 
@@ -417,7 +417,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(grpc.jake.bmi.BmiReply other) {
       if (other == grpc.jake.bmi.BmiReply.getDefaultInstance()) return this;
-      if (other.getBmi() != 0F) {
+      if (other.getBmi() != 0D) {
         setBmi(other.getBmi());
       }
       if (!other.getBmimessage().isEmpty()) {
@@ -453,28 +453,28 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private float bmi_ ;
+    private double bmi_ ;
     /**
-     * <code>float bmi = 1;</code>
+     * <code>double bmi = 1;</code>
      */
-    public float getBmi() {
+    public double getBmi() {
       return bmi_;
     }
     /**
-     * <code>float bmi = 1;</code>
+     * <code>double bmi = 1;</code>
      */
-    public Builder setBmi(float value) {
+    public Builder setBmi(double value) {
       
       bmi_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>float bmi = 1;</code>
+     * <code>double bmi = 1;</code>
      */
     public Builder clearBmi() {
       
-      bmi_ = 0F;
+      bmi_ = 0D;
       onChanged();
       return this;
     }

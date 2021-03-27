@@ -14,13 +14,13 @@ service BMI{
 }
 
 message BmiRequest {
-	float height = 1;
-	float weight = 2;
+	double height = 1;
+	double weight = 2;
 	
 }
 
 message BmiReply {
-	float bmi = 1;
+	double bmi = 1;
 	string bmimessage = 2;	
 }
 

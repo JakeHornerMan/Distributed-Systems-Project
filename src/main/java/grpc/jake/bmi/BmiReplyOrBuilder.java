@@ -8,9 +8,9 @@ public interface BmiReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>float bmi = 1;</code>
+   * <code>double bmi = 1;</code>
    */
-  float getBmi();
+  double getBmi();
 
   /**
    * <code>string bmimessage = 2;</code>

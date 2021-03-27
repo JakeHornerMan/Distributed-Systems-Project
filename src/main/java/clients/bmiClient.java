@@ -10,11 +10,6 @@ import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
 import Interface.HeartDiseaseGUI;
-import classes.BmiOutput;
-import grpc.jake.bloodp.BloodpAnswer;
-import grpc.jake.bloodp.BloodpGrpc;
-import grpc.jake.bloodp.BloodpRequest;
-import grpc.jake.bloodp.BloodpGrpc.BloodpBlockingStub;
 import grpc.jake.bmi.BMIGrpc;
 import grpc.jake.bmi.BMIGrpc.BMIBlockingStub;
 import grpc.jake.bmi.BmiAdvice;
@@ -26,12 +21,12 @@ import io.grpc.ManagedChannelBuilder;
 
 public class BmiClient {
 	
-	private static String bmi;
-	private static String bmiCondition;
-	private static String link1;
-	private static String link2;
+	public static double bmi;
+	public static String bmiCondition;
+	public static String link1;
+	public static String link2;
 	
-	public static BmiOutput bmians = new BmiOutput();
+	public static BmiClient bmians;
 	
 	private static class MyServiceListener implements ServiceListener{
 
@@ -100,18 +95,20 @@ public class BmiClient {
 		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
 		
 		
-		BmiRequest request = BmiRequest.newBuilder().setHeight(1.35f).setWeight(36.7f).build();
+		BmiRequest request = BmiRequest.newBuilder().setHeight(1.35).setWeight(36.7).build();
 		
 		BmiReply response = blockingStub.bmiCalculation(request);
 		
 		System.out.println("BMI: "+response.getBmi());
 		System.out.println("Fitness Condition: "+response.getBmimessage());
 		
-		bmi = String.valueOf(response.getBmi());
+		bmi = response.getBmi();
+		setBmi(bmi);
 		bmiCondition = response.getBmimessage();
+		setBmiCondition(bmiCondition);
 		
-		bmians.setBmitotalvalue(bmi);
-		bmians.setBmiconditionvalue(bmiCondition);
+		//bmians.setBmitotalvalue(getBmi());
+		//bmians.setBmiconditionvalue(bmiCondition);
 	}
 	
 	public static void getbmiAdvice(String host, int port) {
@@ -128,13 +125,43 @@ public class BmiClient {
 		System.out.println("Fitness Condition: "+response.getLink2());
 		
 		link1 = response.getLink1().toString();
+		setLink1(link1);
 		link2 = response.getLink2().toString();
+		setLink2(link2);
 		
-		bmians.setBmihelplink1value(link1);
-		bmians.setBmihelplink1value(link2);
+		//bmians.setBmihelplink1value(link1);
+		//bmians.setBmihelplink1value(link2);
 	}
-	
-	public BmiOutput takeoutput() {
-		return bmians;
+
+	public double getBmi() {
+		return bmi;
+	}
+
+	public static void setBmi(double bmi) {
+		BmiClient.bmi = bmi;
+	}
+
+	public String getBmiCondition() {
+		return bmiCondition;
+	}
+
+	public static void setBmiCondition(String bmiCondition) {
+		BmiClient.bmiCondition = bmiCondition;
+	}
+
+	public String getLink1() {
+		return link1;
+	}
+
+	public static void setLink1(String link1) {
+		BmiClient.link1 = link1;
+	}
+
+	public String getLink2() {
+		return link2;
+	}
+
+	public static void setLink2(String link2) {
+		BmiClient.link2 = link2;
 	}
 }

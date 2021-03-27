@@ -9,7 +9,7 @@ import io.grpc.stub.StreamObserver;
 
 public class BmiServer extends BMIImplBase{
 	
-	public float bmi;
+	public double bmi;
 
 	public static void main(String[] args) {
 		
@@ -38,14 +38,14 @@ public class BmiServer extends BMIImplBase{
 	        StreamObserver<BmiReply> responseObserver) {
 		
 		//Receiving message
-		float height = request.getHeight();
-		float weight = request.getWeight();
+		double height = request.getHeight();
+		double weight = request.getWeight();
 		System.out.println("recieved height: " + height);
 		System.out.println("recieved weight: " + weight);
 		
 		//BMI Calculation
-		float height2 =height*height;
-		float ans = weight/height2;
+		double height2 =height*height;
+		double ans = weight/height2;
 		bmi = ans;
 		
 		String message = "";

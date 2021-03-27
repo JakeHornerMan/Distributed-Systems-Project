@@ -8,12 +8,12 @@ public interface BmiRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>float height = 1;</code>
+   * <code>double height = 1;</code>
    */
-  float getHeight();
+  double getHeight();
 
   /**
-   * <code>float weight = 2;</code>
+   * <code>double weight = 2;</code>
    */
-  float getWeight();
+  double getWeight();
 }
