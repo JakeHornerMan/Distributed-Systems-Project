@@ -24,62 +24,99 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
 import clients.BmiClient;
+//import grpc.jake.bloodp.Empty;
+import grpc.jake.bloodp.BloodpAnswer;
+import grpc.jake.bloodp.BloodpGrpc;
+import grpc.jake.bloodp.BloodpReply;
+import grpc.jake.bloodp.BloodpRequest;
+import grpc.jake.bloodp.BloodpGrpc.BloodpBlockingStub;
 import grpc.jake.bmi.BMIGrpc;
 import grpc.jake.bmi.BmiAdvice;
 import grpc.jake.bmi.BmiReply;
 import grpc.jake.bmi.BmiRequest;
-import grpc.jake.bmi.Empty;
+//import grpc.jake.bmi.Empty;
 import grpc.jake.bmi.BMIGrpc.BMIBlockingStub;
+import grpc.jake.cholesterol.CholesterolAnswer;
+import grpc.jake.cholesterol.CholesterolGrpc;
+import grpc.jake.cholesterol.CholesterolReply;
+import grpc.jake.cholesterol.CholesterolRequest;
+import grpc.jake.cholesterol.Empty;
+import grpc.jake.cholesterol.CholesterolGrpc.CholesterolBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import java.awt.Font;
-import java.awt.Canvas;
-import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
 
 public class HeartDiseaseGUI {
 
-	//private static BmiServiceBlockingStub blockingStub;
-	//private static BmiServiceStub asyncStub;
 	private ServiceInfo bmiServiceInfo;
+	private ServiceInfo bpServiceInfo;
+	private ServiceInfo choServiceInfo;
+	public double bmiheight;
+	public double bmiweight;
+	public int bpsystolic;
+	public int bpdystolic;
+	public int total;
+	public int ldl;
+	public int hdl;
+	public int tri;
 	
-	private JFrame frame;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField heighttf;
-	private JTextField weighttf;
-	private JSeparator separator;
-	private JSeparator separator_1;
-	private JLabel lblNewLabel_2;
-	private JTextPane textPane;
-	private JTextArea textArea_1;
-	private JLabel lblNewLabel_3;
-	private JTextArea textArea;
-	private JTextArea bmitotal;
-	private JTextArea bmicondition;
-	private JTextArea bmihelplink1;
-	private JTextArea bmihelplink2;
-
-	/**
-	 * Launch the application.
-	 */
 	public String bmitotalvalue;
 	public String bmiconditionvalue;
 	public String bmihelplink1value;
 	public String bmihelplink2value;
 	
-	public double bmiheight;
-	public double bmiweight;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
+	public String bptotalvalue;
+	public String bpconditionvalue;
+	public String bphelplink1value;
+	public String bphelplink2value;
+	
+	public String chototalvalue;
+	public String choldlvalue;
+	public String chohdlvalue;
+	public String chotrivalue;
+	public String chohelplink1value;
+	public String chohelplink2value;
+	
+	private JFrame frame;
+	private JTextField heighttf;
+	private JTextField weighttf;
+	private JSeparator separator;
+	private JSeparator separator_1;
+	private JLabel lblNewLabel_2;
+	private JTextArea bmitotal;
+	private JTextArea bmicondition;
+	private JTextArea bmihelplink1;
+	private JTextArea bmihelplink2;
+	private JTextArea bptotaltf;
+	private JTextArea bpcontf;
+	private JTextArea bplink1tf;
+	private JTextArea bplink2tf;
+	private JTextArea chototaltf;
+	private JTextArea choldltf;
+	private JTextArea chohdltf;
+	private JTextArea chotritf;
+	private JTextArea cholink1tf;
+	private JTextArea cholink2tf;
+	
+
+	/**
+	 * Launch the application.
+	 */
+	
+	
+	
+	private JTextField systf;
+	private JTextField dystf;
+	private JTextField chototalinputtf;
+	private JTextField choldlinputtf;
+	private JTextField chohdlinputtf;
+	private JTextField chotriinputtf;
 	
 	
 	public static void main(String[] args) {
@@ -102,62 +139,18 @@ public class HeartDiseaseGUI {
 	public HeartDiseaseGUI() {
 		
 		initialize();
+		DoServices();
+		
 	}
 	
-	public void discoverBmiService(String service_type) {
-		try {
-			//get instance of jmDNS
-			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
-			
-			//i need to listen for services added/removed etc
-			jmdns.addServiceListener(service_type, new ServiceListener() {
-			
-			@Override
-			public void serviceResolved(ServiceEvent event) {
-				System.out.println("Math Service resolved: " + event.getInfo());
-
-				bmiServiceInfo = event.getInfo();
-
-				int port = bmiServiceInfo.getPort();
-				
-				System.out.println("resolving " + service_type + " with properties ...");
-				System.out.println("\t port: " + port);
-				System.out.println("\t type:"+ event.getType());
-				System.out.println("\t name: " + event.getName());
-				System.out.println("\t description/properties: " + bmiServiceInfo.getNiceTextString());
-				System.out.println("\t host: " + bmiServiceInfo.getHostAddresses()[0]);
-			
-				
-			}
-			
-			@Override
-			public void serviceRemoved(ServiceEvent event) {
-				System.out.println("Service removed: " + event.getInfo());
-
-				
-			}
-			
-			@Override
-			public void serviceAdded(ServiceEvent event) {
-				System.out.println("Service added: " + event.getInfo());
-
-				
-			}
-		});
+	public void DoServices() {
 		
-		// Wait a bit
-		Thread.sleep(2000);
-		
-		jmdns.close();
-
-		} catch (UnknownHostException e) {
-			System.out.println(e.getMessage());
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String bmi_service_type = "_bmi._tcp.local.";
+		discoverBmiService(bmi_service_type);
+		String bp_service_type = "_bloodp._tcp.local.";
+		discoverBpService(bp_service_type);
+		String cho_service_type = "_cholesterol._tcp.local.";
+		discoverChoService(cho_service_type);
 	}
 
 	/**
@@ -219,7 +212,7 @@ public class HeartDiseaseGUI {
 		frame.getContentPane().add(bmibiota);
 		bmibiota.setEditable(false);
 		
-		lblNewLabel_3 = new JLabel("BMI: ");
+		JLabel lblNewLabel_3 = new JLabel("BMI: ");
 		lblNewLabel_3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
 		lblNewLabel_3.setBounds(10, 119, 59, 20);
 		frame.getContentPane().add(lblNewLabel_3);
@@ -264,15 +257,15 @@ public class HeartDiseaseGUI {
 		bmibiota_1.setBounds(7, 10, 262, 106);
 		frame.getContentPane().add(bmibiota_1);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(338, 209, 86, 20);
-		frame.getContentPane().add(textField);
+		systf = new JTextField();
+		systf.setColumns(10);
+		systf.setBounds(338, 209, 86, 20);
+		frame.getContentPane().add(systf);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(338, 240, 86, 20);
-		frame.getContentPane().add(textField_1);
+		dystf = new JTextField();
+		dystf.setColumns(10);
+		dystf.setBounds(338, 240, 86, 20);
+		frame.getContentPane().add(dystf);
 		
 		JLabel lblSystolic = new JLabel("Systolic:");
 		lblSystolic.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
@@ -284,59 +277,59 @@ public class HeartDiseaseGUI {
 		lblDystolic.setBounds(279, 240, 59, 19);
 		frame.getContentPane().add(lblDystolic);
 		
-		JButton bmibtn_1 = new JButton("Calculate");
-		bmibtn_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 11));
-		bmibtn_1.setBounds(279, 271, 145, 27);
-		frame.getContentPane().add(bmibtn_1);
+		JButton bpbtn = new JButton("Calculate");
+		bpbtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 11));
+		bpbtn.setBounds(279, 271, 145, 27);
+		frame.getContentPane().add(bpbtn);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("Blood Pressure");
 		lblNewLabel_3_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
 		lblNewLabel_3_1.setBounds(13, 327, 119, 20);
 		frame.getContentPane().add(lblNewLabel_3_1);
 		
-		JTextArea bmitotal_1 = new JTextArea();
-		bmitotal_1.setText((String) null);
-		bmitotal_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1.setEditable(false);
-		bmitotal_1.setBounds(142, 324, 130, 23);
-		frame.getContentPane().add(bmitotal_1);
+		bptotaltf = new JTextArea();
+		bptotaltf.setText((String) null);
+		bptotaltf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		bptotaltf.setEditable(false);
+		bptotaltf.setBounds(142, 324, 130, 23);
+		frame.getContentPane().add(bptotaltf);
 		
 		JLabel lblNewLabel_3_1_1 = new JLabel("Condition:");
 		lblNewLabel_3_1_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
 		lblNewLabel_3_1_1.setBounds(13, 358, 86, 20);
 		frame.getContentPane().add(lblNewLabel_3_1_1);
 		
-		JTextArea bmitotal_1_1 = new JTextArea();
-		bmitotal_1_1.setText((String) null);
-		bmitotal_1_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1_1.setEditable(false);
-		bmitotal_1_1.setBounds(142, 355, 130, 23);
-		frame.getContentPane().add(bmitotal_1_1);
+		bpcontf = new JTextArea();
+		bpcontf.setText((String) null);
+		bpcontf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		bpcontf.setEditable(false);
+		bpcontf.setBounds(142, 355, 130, 23);
+		frame.getContentPane().add(bpcontf);
 		
 		JLabel lblHelpfulLinks_1 = new JLabel("Helpful links:");
 		lblHelpfulLinks_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
 		lblHelpfulLinks_1.setBounds(10, 402, 86, 19);
 		frame.getContentPane().add(lblHelpfulLinks_1);
 		
-		JTextArea bmihelplink1_1 = new JTextArea();
-		bmihelplink1_1.setText((String) null);
-		bmihelplink1_1.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
-		bmihelplink1_1.setEditable(false);
-		bmihelplink1_1.setBounds(101, 410, 323, 20);
-		frame.getContentPane().add(bmihelplink1_1);
+		bplink1tf = new JTextArea();
+		bplink1tf.setText((String) null);
+		bplink1tf.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
+		bplink1tf.setEditable(false);
+		bplink1tf.setBounds(101, 389, 323, 20);
+		frame.getContentPane().add(bplink1tf);
 		
-		JTextArea bmihelplink1_1_1 = new JTextArea();
-		bmihelplink1_1_1.setText((String) null);
-		bmihelplink1_1_1.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
-		bmihelplink1_1_1.setEditable(false);
-		bmihelplink1_1_1.setBounds(101, 389, 323, 20);
-		frame.getContentPane().add(bmihelplink1_1_1);
+		bplink2tf = new JTextArea();
+		bplink2tf.setText((String) null);
+		bplink2tf.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
+		bplink2tf.setEditable(false);
+		bplink2tf.setBounds(101, 410, 323, 20);
+		frame.getContentPane().add(bplink2tf);
 		
 		JTextArea txtrHighCholesterolUsually = new JTextArea();
 		txtrHighCholesterolUsually.setText("High cholesterol usually has no signs or \r\nsymptoms.\r\nThe only way to know whether someone\r\nhas high cholesterol is to get a blood \r\ntest called “lipid profile”. ");
 		txtrHighCholesterolUsually.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
 		txtrHighCholesterolUsually.setEditable(false);
-		txtrHighCholesterolUsually.setBounds(10, 454, 262, 89);
+		txtrHighCholesterolUsually.setBounds(10, 454, 252, 89);
 		frame.getContentPane().add(txtrHighCholesterolUsually);
 		
 		JLabel lblSystolic_1 = new JLabel("Total:");
@@ -349,40 +342,40 @@ public class HeartDiseaseGUI {
 		lblSystolic_2.setBounds(282, 476, 46, 19);
 		frame.getContentPane().add(lblSystolic_2);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(338, 455, 86, 20);
-		frame.getContentPane().add(textField_4);
+		chototalinputtf = new JTextField();
+		chototalinputtf.setColumns(10);
+		chototalinputtf.setBounds(338, 455, 86, 20);
+		frame.getContentPane().add(chototalinputtf);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(338, 476, 86, 20);
-		frame.getContentPane().add(textField_5);
+		choldlinputtf = new JTextField();
+		choldlinputtf.setColumns(10);
+		choldlinputtf.setBounds(338, 476, 86, 20);
+		frame.getContentPane().add(choldlinputtf);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(338, 496, 86, 20);
-		frame.getContentPane().add(textField_6);
+		chohdlinputtf = new JTextField();
+		chohdlinputtf.setColumns(10);
+		chohdlinputtf.setBounds(338, 496, 86, 20);
+		frame.getContentPane().add(chohdlinputtf);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(338, 516, 86, 20);
-		frame.getContentPane().add(textField_7);
+		chotriinputtf = new JTextField();
+		chotriinputtf.setColumns(10);
+		chotriinputtf.setBounds(338, 516, 86, 20);
+		frame.getContentPane().add(chotriinputtf);
 		
 		JLabel lblSystolic_2_1 = new JLabel("HDL:");
 		lblSystolic_2_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
 		lblSystolic_2_1.setBounds(282, 496, 46, 19);
 		frame.getContentPane().add(lblSystolic_2_1);
 		
-		JLabel lblSystolic_2_2 = new JLabel("Systolic");
+		JLabel lblSystolic_2_2 = new JLabel("Triglicerides:");
 		lblSystolic_2_2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
-		lblSystolic_2_2.setBounds(282, 516, 46, 20);
+		lblSystolic_2_2.setBounds(263, 516, 75, 20);
 		frame.getContentPane().add(lblSystolic_2_2);
 		
-		JButton bmibtn_1_1 = new JButton("Calculate");
-		bmibtn_1_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 11));
-		bmibtn_1_1.setBounds(279, 542, 145, 27);
-		frame.getContentPane().add(bmibtn_1_1);
+		JButton chobtn = new JButton("Calculate");
+		chobtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 11));
+		chobtn.setBounds(279, 542, 145, 27);
+		frame.getContentPane().add(chobtn);
 		
 		JLabel lblNewLabel_3_1_2 = new JLabel("Total:");
 		lblNewLabel_3_1_2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
@@ -394,19 +387,19 @@ public class HeartDiseaseGUI {
 		lblNewLabel_3_1_2_1.setBounds(197, 576, 46, 20);
 		frame.getContentPane().add(lblNewLabel_3_1_2_1);
 		
-		JTextArea bmitotal_1_2 = new JTextArea();
-		bmitotal_1_2.setText((String) null);
-		bmitotal_1_2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1_2.setEditable(false);
-		bmitotal_1_2.setBounds(57, 577, 130, 23);
-		frame.getContentPane().add(bmitotal_1_2);
+		chototaltf = new JTextArea();
+		chototaltf.setText(chototalvalue);
+		chototaltf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		chototaltf.setEditable(false);
+		chototaltf.setBounds(57, 577, 130, 23);
+		frame.getContentPane().add(chototaltf);
 		
-		JTextArea bmitotal_1_3 = new JTextArea();
-		bmitotal_1_3.setText((String) null);
-		bmitotal_1_3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1_3.setEditable(false);
-		bmitotal_1_3.setBounds(249, 573, 130, 23);
-		frame.getContentPane().add(bmitotal_1_3);
+		choldltf = new JTextArea();
+		choldltf.setText(choldlvalue);
+		choldltf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		choldltf.setEditable(false);
+		choldltf.setBounds(249, 573, 130, 23);
+		frame.getContentPane().add(choldltf);
 		
 		JLabel lblNewLabel_3_1_2_2 = new JLabel("HDL:");
 		lblNewLabel_3_1_2_2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
@@ -418,79 +411,100 @@ public class HeartDiseaseGUI {
 		lblNewLabel_3_1_2_2_1.setBounds(181, 607, 100, 18);
 		frame.getContentPane().add(lblNewLabel_3_1_2_2_1);
 		
-		JTextArea bmitotal_1_2_1 = new JTextArea();
-		bmitotal_1_2_1.setText((String) null);
-		bmitotal_1_2_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1_2_1.setEditable(false);
-		bmitotal_1_2_1.setBounds(50, 607, 130, 23);
-		frame.getContentPane().add(bmitotal_1_2_1);
+		chohdltf = new JTextArea();
+		chohdltf.setText(chohdlvalue);
+		chohdltf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		chohdltf.setEditable(false);
+		chohdltf.setBounds(50, 607, 130, 23);
+		frame.getContentPane().add(chohdltf);
 		
-		JTextArea bmitotal_1_2_1_1 = new JTextArea();
-		bmitotal_1_2_1_1.setText((String) null);
-		bmitotal_1_2_1_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		bmitotal_1_2_1_1.setEditable(false);
-		bmitotal_1_2_1_1.setBounds(286, 607, 138, 23);
-		frame.getContentPane().add(bmitotal_1_2_1_1);
+		chotritf = new JTextArea();
+		chotritf.setText(chotrivalue);
+		chotritf.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+		chotritf.setEditable(false);
+		chotritf.setBounds(286, 607, 138, 23);
+		frame.getContentPane().add(chotritf);
 		
 		JLabel lblHelpfulLinks_1_1 = new JLabel("Helpful links:");
 		lblHelpfulLinks_1_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
 		lblHelpfulLinks_1_1.setBounds(10, 654, 86, 19);
 		frame.getContentPane().add(lblHelpfulLinks_1_1);
 		
-		JTextArea bmihelplink1_1_1_1 = new JTextArea();
-		bmihelplink1_1_1_1.setText((String) null);
-		bmihelplink1_1_1_1.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
-		bmihelplink1_1_1_1.setEditable(false);
-		bmihelplink1_1_1_1.setBounds(101, 644, 323, 20);
-		frame.getContentPane().add(bmihelplink1_1_1_1);
+		cholink1tf = new JTextArea();
+		cholink1tf.setText(chohelplink1value);
+		cholink1tf.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
+		cholink1tf.setEditable(false);
+		cholink1tf.setBounds(101, 644, 323, 20);
+		frame.getContentPane().add(cholink1tf);
 		
-		JTextArea bmihelplink1_1_2 = new JTextArea();
-		bmihelplink1_1_2.setText((String) null);
-		bmihelplink1_1_2.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
-		bmihelplink1_1_2.setEditable(false);
-		bmihelplink1_1_2.setBounds(101, 665, 323, 20);
-		frame.getContentPane().add(bmihelplink1_1_2);
+		cholink2tf = new JTextArea();
+		cholink2tf.setText(chohelplink2value);
+		cholink2tf.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
+		cholink2tf.setEditable(false);
+		cholink2tf.setBounds(101, 665, 323, 20);
+		frame.getContentPane().add(cholink2tf);
 		
 		
 		//Application Code
 		bmibtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String bmi_service_type = "_bmi._tcp.local.";
-				discoverBmiService(bmi_service_type);
+				
 				getValuesService1Bmi();
-				getValuesService2Bmi();
+				//getValuesService2Bmi();
+			}
+		});
+		
+		bpbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				getValuesService1Bp();
+				//getValuesService2Bp();
+			}
+		});
+		
+		chobtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				getValuesService1Cho();
+				//getValuesService2Cho();
 			}
 		});
 		
 	}
 	
 	public void getValuesService1Bmi() {
-		
-		bmiheight= Double.parseDouble(heighttf.getText());
-		bmiweight= Double.parseDouble(weighttf.getText());
-		
-		//service 1
-		
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(bmiServiceInfo.getHostAddresses()[0], bmiServiceInfo.getPort()).usePlaintext().build();
-		
-		BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
-		
-		BmiRequest request1 = BmiRequest.newBuilder().setHeight(bmiheight).setWeight(bmiweight).build();
-		
-		BmiReply response1 = blockingStub.bmiCalculation(request1);
-		
-		bmitotalvalue = String.valueOf(response1.getBmi());
-		bmiconditionvalue = response1.getBmimessage();
-		
-		System.out.println(bmitotalvalue);
-		System.out.println(bmiconditionvalue);
-		
-		//setting value in GUI
-		bmitotal.setText(bmitotalvalue);
-		bmicondition.setText(bmiconditionvalue);
-		//bmihelplink1.setText(bmihelplink1value);
-		//bmihelplink2.setText(bmihelplink2value);
+			
+			bmiheight= Double.parseDouble(heighttf.getText());
+			bmiweight= Double.parseDouble(weighttf.getText());
+			//service 1
+			if (bmiheight >= 2.73||bmiweight>= 443) {
+				JOptionPane.showMessageDialog(frame, "Please enter height in meters: '1.70' m "
+						+ "\n Please enter weight in kilograms: '67.5' kg");
+			}else {
+				ManagedChannel channel = ManagedChannelBuilder.forAddress(bmiServiceInfo.getHostAddresses()[0], bmiServiceInfo.getPort()).usePlaintext().build();
+				
+				BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
+				
+				BmiRequest request1 = BmiRequest.newBuilder().setHeight(bmiheight).setWeight(bmiweight).build();
+				
+				BmiReply response1 = blockingStub.bmiCalculation(request1);
+				
+				double d = response1.getBmi();
+				bmitotalvalue =  String.valueOf(Math.round(d * 100.0) / 100.0);
+				bmiconditionvalue = response1.getBmimessage();
+				
+				System.out.println(bmitotalvalue);
+				System.out.println(bmiconditionvalue);
+				
+				//setting value in GUI
+				bmitotal.setText(bmitotalvalue);
+				bmicondition.setText(bmiconditionvalue);
+				
+				getValuesService2Bmi();
+			}
 		
 	}
 	
@@ -501,7 +515,7 @@ public class HeartDiseaseGUI {
 		
 		BMIBlockingStub blockingStub2 = BMIGrpc.newBlockingStub(channel2);
 		
-		Empty request2 = Empty.newBuilder().build();
+		grpc.jake.bmi.Empty request2 = grpc.jake.bmi.Empty.newBuilder().build();
 		
 		BmiAdvice response2 = blockingStub2.bmiAdvice(request2);
 		
@@ -511,7 +525,283 @@ public class HeartDiseaseGUI {
 		System.out.println(bmihelplink1value);
 		System.out.println(bmihelplink2value);
 		
+		//setting value in GUI
 		bmihelplink1.setText(bmihelplink1value);
 		bmihelplink2.setText(bmihelplink2value);
+	}
+	
+	public void getValuesService1Bp(){
+		try {
+			bpsystolic = Integer.parseInt(systf.getText());
+			bpdystolic = Integer.parseInt(dystf.getText());
+			
+			//service 1
+			
+			ManagedChannel channel3 = ManagedChannelBuilder.forAddress(bpServiceInfo.getHostAddresses()[0], bpServiceInfo.getPort()).usePlaintext().build();
+			
+			BloodpBlockingStub blockingStub3 = BloodpGrpc.newBlockingStub(channel3);
+			
+			//prepare request
+			BloodpRequest request = BloodpRequest.newBuilder().setSystolic(bpsystolic).setDiastolic(bpdystolic).build();
+			
+			BloodpReply response = blockingStub3.bloodpCalculation(request);
+			
+			bptotalvalue = response.getBp();
+			bpconditionvalue = response.getBpmessage();
+			
+			System.out.println(bptotalvalue);
+			System.out.println(bpconditionvalue);
+			
+			//setting value in GUI
+			bptotaltf.setText(bptotalvalue);
+			bpcontf.setText(bpconditionvalue);
+			
+			getValuesService2Bp();
+		}
+		catch (NumberFormatException ignore) {
+			JOptionPane.showMessageDialog(frame, "Please enter whole numbers as avlues for Systolic and Dystolic");
+	    }
+	}
+	
+	public void getValuesService2Bp() {
+		//service 2
+		ManagedChannel channel = ManagedChannelBuilder.forAddress(bpServiceInfo.getHostAddresses()[0], bpServiceInfo.getPort()).usePlaintext().build();
+		
+		BloodpBlockingStub blockingStub = BloodpGrpc.newBlockingStub(channel);
+		
+		//prepare request
+		grpc.jake.bloodp.Empty request2 = grpc.jake.bloodp.Empty.newBuilder().build();
+		
+		BloodpAnswer response = blockingStub.bloodpAdvice(request2);
+		
+		bphelplink1value=response.getHelplink1();
+		bphelplink2value=response.getHelplink2();
+		
+		System.out.println(bphelplink1value);
+		System.out.println(bphelplink2value);
+		
+		bplink1tf.setText(bphelplink1value);
+		bplink2tf.setText(bphelplink2value);
+		
+	}
+	
+	public void getValuesService1Cho() {
+		try {
+			total = Integer.parseInt(chototalinputtf.getText());
+			ldl = Integer.parseInt(choldlinputtf.getText());
+			hdl = Integer.parseInt(chohdlinputtf.getText());
+			tri = Integer.parseInt(chotriinputtf.getText());
+			
+			ManagedChannel channel = ManagedChannelBuilder.forAddress(choServiceInfo.getHostAddresses()[0], choServiceInfo.getPort()).usePlaintext().build();
+			
+			CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
+			
+			CholesterolRequest request = CholesterolRequest.newBuilder().setTotal(total).setLdl(ldl).setHdl(hdl).setTriglycerides(tri).build();
+			
+			CholesterolReply response = blockingStub.cholesterolCalculation(request);
+			
+			chototalvalue = response.getTotal();
+			choldlvalue = response.getAnsldl();
+			chohdlvalue = response.getAnshdl();
+			chotrivalue = response.getAnstri();
+			
+			chototaltf.setText(choldlvalue);
+			choldltf.setText(choldlvalue);
+			chohdltf.setText(chohdlvalue);
+			chotritf.setText(choldlvalue);
+			
+			getValuesService2Cho();
+		}
+		catch (NumberFormatException ignore) {
+			JOptionPane.showMessageDialog(frame, "Please enter whole numbers as values for each field");
+	    }
+	}
+	
+	public void getValuesService2Cho() {
+		
+		ManagedChannel channel = ManagedChannelBuilder.forAddress(choServiceInfo.getHostAddresses()[0], choServiceInfo.getPort()).usePlaintext().build();
+		
+		CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
+		
+		grpc.jake.cholesterol.Empty request = grpc.jake.cholesterol.Empty.newBuilder().build();
+		
+		CholesterolAnswer response = blockingStub.cholesterolAdvice(request);
+		
+		chohelplink1value = response.getHelplink1();
+		chohelplink2value = response.getHelplink2();
+		
+		cholink1tf.setText(chohelplink1value);
+		cholink2tf.setText(chohelplink2value);
+	}
+	
+	//service discovery code
+	public void discoverBmiService(String service_type) {
+		try {
+			//get instance of jmDNS
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			
+			//i need to listen for services added/removed etc
+			jmdns.addServiceListener(service_type, new ServiceListener() {
+			
+			@Override
+			public void serviceResolved(ServiceEvent event) {
+				System.out.println("Service resolved: " + event.getInfo());
+
+				bmiServiceInfo = event.getInfo();
+
+				int port = bmiServiceInfo.getPort();
+				
+				System.out.println("resolving " + service_type + " with properties ...");
+				System.out.println("\t port: " + port);
+				System.out.println("\t type:"+ event.getType());
+				System.out.println("\t name: " + event.getName());
+				System.out.println("\t description/properties: " + bmiServiceInfo.getNiceTextString());
+				System.out.println("\t host: " + bmiServiceInfo.getHostAddresses()[0]);
+			
+				
+			}
+			
+			@Override
+			public void serviceRemoved(ServiceEvent event) {
+				System.out.println("Service removed: " + event.getInfo());
+
+				
+			}
+			
+			@Override
+			public void serviceAdded(ServiceEvent event) {
+				System.out.println("Service added: " + event.getInfo());
+
+				
+			}
+		});
+		
+		// Wait a bit
+		Thread.sleep(10000);
+		
+		jmdns.close();
+
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void discoverBpService(String service_type) {
+		
+		try {
+			//get instance of jmDNS
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			
+			//i need to listen for services added/removed etc
+			jmdns.addServiceListener(service_type, new ServiceListener() {
+			
+			@Override
+			public void serviceResolved(ServiceEvent event) {
+				System.out.println("Service resolved: " + event.getInfo());
+
+				bpServiceInfo = event.getInfo();
+
+				int port = bpServiceInfo.getPort();
+				
+				System.out.println("resolving " + service_type + " with properties ...");
+				System.out.println("\t port: " + port);
+				System.out.println("\t type:"+ event.getType());
+				System.out.println("\t name: " + event.getName());
+				System.out.println("\t description/properties: " + bpServiceInfo.getNiceTextString());
+				System.out.println("\t host: " + bpServiceInfo.getHostAddresses()[0]);
+			
+				
+			}
+			
+			@Override
+			public void serviceRemoved(ServiceEvent event) {
+				System.out.println("Service removed: " + event.getInfo());
+
+				
+			}
+			
+			@Override
+			public void serviceAdded(ServiceEvent event) {
+				System.out.println("Service added: " + event.getInfo());
+
+				
+			}
+		});
+		
+		// Wait a bit
+		Thread.sleep(10000);
+		
+		jmdns.close();
+
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void discoverChoService(String service_type) {
+		
+		try {
+			//get instance of jmDNS
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			
+			//i need to listen for services added/removed etc
+			jmdns.addServiceListener(service_type, new ServiceListener() {
+			
+			@Override
+			public void serviceResolved(ServiceEvent event) {
+				System.out.println("Service resolved: " + event.getInfo());
+
+				choServiceInfo = event.getInfo();
+
+				int port = choServiceInfo.getPort();
+				
+				System.out.println("resolving " + service_type + " with properties ...");
+				System.out.println("\t port: " + port);
+				System.out.println("\t type:"+ event.getType());
+				System.out.println("\t name: " + event.getName());
+				System.out.println("\t description/properties: " + choServiceInfo.getNiceTextString());
+				System.out.println("\t host: " + choServiceInfo.getHostAddresses()[0]);
+			
+				
+			}
+			
+			@Override
+			public void serviceRemoved(ServiceEvent event) {
+				System.out.println("Service removed: " + event.getInfo());
+
+				
+			}
+			
+			@Override
+			public void serviceAdded(ServiceEvent event) {
+				System.out.println("Service added: " + event.getInfo());
+
+				
+			}
+		});
+		
+		// Wait a bit
+		Thread.sleep(10000);
+		
+		jmdns.close();
+
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -83,10 +83,10 @@ public class CholesterolServer extends CholesterolImplBase {
 		}
 		
 		CholesterolReply reply = CholesterolReply.newBuilder()
-				.setTotal("Total Chlesterol levels are: "+anstotal)
-				.setAnsldl("LDL Chlesterol levels are: "+ansldl)
-				.setAnshdl("HDL Chlesterol levels are: "+anshdl)
-				.setAnstri("Triglyceride Chlesterol levels are: "+anstri)
+				.setTotal(anstotal)
+				.setAnsldl(ansldl)
+				.setAnshdl(anshdl)
+				.setAnstri(anstri)
 				.build();
 		
 		//responding

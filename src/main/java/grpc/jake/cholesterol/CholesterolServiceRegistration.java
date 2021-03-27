@@ -27,14 +27,12 @@ public class CholesterolServiceRegistration {
 			jmdns.registerService(serviceInfo);
 			System.out.printf("registering type %s , name %s , port %d ", service_type,service_name,service_port);
 			//usually wait
-			Thread.sleep(10000);
+			Thread.sleep(360000);
 			
 			System.out.println("\n unregistering services");
 			//unregister services
 			jmdns.unregisterAllServices();
 			System.out.println("\n unregistering completed");
-			
-			Thread.sleep(10000);
 			
 			
 			//surround with try/catch
