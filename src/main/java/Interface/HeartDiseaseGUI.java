@@ -272,7 +272,7 @@ public class HeartDiseaseGUI {
 		lblSystolic.setBounds(279, 212, 59, 19);
 		frame.getContentPane().add(lblSystolic);
 		
-		JLabel lblDystolic = new JLabel("Dystolic: ");
+		JLabel lblDystolic = new JLabel("Diastolic: ");
 		lblDystolic.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
 		lblDystolic.setBounds(279, 240, 59, 19);
 		frame.getContentPane().add(lblDystolic);
@@ -470,6 +470,7 @@ public class HeartDiseaseGUI {
 				
 				getValuesService1Cho();
 				//getValuesService2Cho();
+				
 			}
 		});
 		
@@ -477,33 +478,45 @@ public class HeartDiseaseGUI {
 	
 	public void getValuesService1Bmi() {
 			
-			bmiheight= Double.parseDouble(heighttf.getText());
-			bmiweight= Double.parseDouble(weighttf.getText());
+			String height= heighttf.getText();
+			String weight= weighttf.getText();
 			//service 1
-			if (bmiheight >= 2.73||bmiweight>= 443) {
-				JOptionPane.showMessageDialog(frame, "Please enter height in meters: '1.70' m "
-						+ "\n Please enter weight in kilograms: '67.5' kg");
-			}else {
-				ManagedChannel channel = ManagedChannelBuilder.forAddress(bmiServiceInfo.getHostAddresses()[0], bmiServiceInfo.getPort()).usePlaintext().build();
+			if (height == null||weight == null) {
+				JOptionPane.showMessageDialog(frame, "Please enter values in all fields");
+			}
+			else {
+			
+				bmiheight= Double.parseDouble(height);
+				bmiweight= Double.parseDouble(weight);
 				
-				BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
-				
-				BmiRequest request1 = BmiRequest.newBuilder().setHeight(bmiheight).setWeight(bmiweight).build();
-				
-				BmiReply response1 = blockingStub.bmiCalculation(request1);
-				
-				double d = response1.getBmi();
-				bmitotalvalue =  String.valueOf(Math.round(d * 100.0) / 100.0);
-				bmiconditionvalue = response1.getBmimessage();
-				
-				System.out.println(bmitotalvalue);
-				System.out.println(bmiconditionvalue);
-				
-				//setting value in GUI
-				bmitotal.setText(bmitotalvalue);
-				bmicondition.setText(bmiconditionvalue);
-				
-				getValuesService2Bmi();
+				if (bmiheight >= 2.73||bmiweight>= 443) {
+					JOptionPane.showMessageDialog(frame, "Please enter height in meters: '1.70' m "
+							+ "\n Please enter weight in kilograms: '67.5' kg");
+				}else if (bmiheight == 0||bmiweight == 0) {
+					JOptionPane.showMessageDialog(frame, "Please enter values in all fields");
+				}
+				else {
+					ManagedChannel channel = ManagedChannelBuilder.forAddress(bmiServiceInfo.getHostAddresses()[0], bmiServiceInfo.getPort()).usePlaintext().build();
+					
+					BMIBlockingStub blockingStub = BMIGrpc.newBlockingStub(channel);
+					
+					BmiRequest request1 = BmiRequest.newBuilder().setHeight(bmiheight).setWeight(bmiweight).build();
+					
+					BmiReply response1 = blockingStub.bmiCalculation(request1);
+					
+					double d = response1.getBmi();
+					bmitotalvalue =  String.valueOf(Math.round(d * 100.0) / 100.0);
+					bmiconditionvalue = response1.getBmimessage();
+					
+					System.out.println(bmitotalvalue);
+					System.out.println(bmiconditionvalue);
+					
+					//setting value in GUI
+					bmitotal.setText(bmitotalvalue);
+					bmicondition.setText(bmiconditionvalue);
+					
+					getValuesService2Bmi();
+				}
 			}
 		
 	}
@@ -535,28 +548,34 @@ public class HeartDiseaseGUI {
 			bpsystolic = Integer.parseInt(systf.getText());
 			bpdystolic = Integer.parseInt(dystf.getText());
 			
-			//service 1
-			
-			ManagedChannel channel3 = ManagedChannelBuilder.forAddress(bpServiceInfo.getHostAddresses()[0], bpServiceInfo.getPort()).usePlaintext().build();
-			
-			BloodpBlockingStub blockingStub3 = BloodpGrpc.newBlockingStub(channel3);
-			
-			//prepare request
-			BloodpRequest request = BloodpRequest.newBuilder().setSystolic(bpsystolic).setDiastolic(bpdystolic).build();
-			
-			BloodpReply response = blockingStub3.bloodpCalculation(request);
-			
-			bptotalvalue = response.getBp();
-			bpconditionvalue = response.getBpmessage();
-			
-			System.out.println(bptotalvalue);
-			System.out.println(bpconditionvalue);
-			
-			//setting value in GUI
-			bptotaltf.setText(bptotalvalue);
-			bpcontf.setText(bpconditionvalue);
-			
-			getValuesService2Bp();
+			if(bpsystolic == 0||bpdystolic == 0) {
+				
+				JOptionPane.showMessageDialog(frame, "Please enter values in all fields");
+			}
+			else {
+				//service 1
+				
+				ManagedChannel channel3 = ManagedChannelBuilder.forAddress(bpServiceInfo.getHostAddresses()[0], bpServiceInfo.getPort()).usePlaintext().build();
+				
+				BloodpBlockingStub blockingStub3 = BloodpGrpc.newBlockingStub(channel3);
+				
+				//prepare request
+				BloodpRequest request = BloodpRequest.newBuilder().setSystolic(bpsystolic).setDiastolic(bpdystolic).build();
+				
+				BloodpReply response = blockingStub3.bloodpCalculation(request);
+				
+				bptotalvalue = response.getBp();
+				bpconditionvalue = response.getBpmessage();
+				
+				System.out.println(bptotalvalue);
+				System.out.println(bpconditionvalue);
+				
+				//setting value in GUI
+				bptotaltf.setText(bptotalvalue);
+				bpcontf.setText(bpconditionvalue);
+				
+				getValuesService2Bp();
+			}
 		}
 		catch (NumberFormatException ignore) {
 			JOptionPane.showMessageDialog(frame, "Please enter whole numbers as avlues for Systolic and Dystolic");
@@ -592,25 +611,31 @@ public class HeartDiseaseGUI {
 			hdl = Integer.parseInt(chohdlinputtf.getText());
 			tri = Integer.parseInt(chotriinputtf.getText());
 			
-			ManagedChannel channel = ManagedChannelBuilder.forAddress(choServiceInfo.getHostAddresses()[0], choServiceInfo.getPort()).usePlaintext().build();
+			if(total == 0||ldl == 0||hdl == 0||tri == 0) {
+				
+				JOptionPane.showMessageDialog(frame, "Please enter values in all fields");
+			}else {
 			
-			CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
-			
-			CholesterolRequest request = CholesterolRequest.newBuilder().setTotal(total).setLdl(ldl).setHdl(hdl).setTriglycerides(tri).build();
-			
-			CholesterolReply response = blockingStub.cholesterolCalculation(request);
-			
-			chototalvalue = response.getTotal();
-			choldlvalue = response.getAnsldl();
-			chohdlvalue = response.getAnshdl();
-			chotrivalue = response.getAnstri();
-			
-			chototaltf.setText(choldlvalue);
-			choldltf.setText(choldlvalue);
-			chohdltf.setText(chohdlvalue);
-			chotritf.setText(choldlvalue);
-			
-			getValuesService2Cho();
+				ManagedChannel channel = ManagedChannelBuilder.forAddress(choServiceInfo.getHostAddresses()[0], choServiceInfo.getPort()).usePlaintext().build();
+				
+				CholesterolBlockingStub blockingStub = CholesterolGrpc.newBlockingStub(channel);
+				
+				CholesterolRequest request = CholesterolRequest.newBuilder().setTotal(total).setLdl(ldl).setHdl(hdl).setTriglycerides(tri).build();
+				
+				CholesterolReply response = blockingStub.cholesterolCalculation(request);
+				
+				chototalvalue = response.getTotal();
+				choldlvalue = response.getAnsldl();
+				chohdlvalue = response.getAnshdl();
+				chotrivalue = response.getAnstri();
+				
+				chototaltf.setText(choldlvalue);
+				choldltf.setText(choldlvalue);
+				chohdltf.setText(chohdlvalue);
+				chotritf.setText(choldlvalue);
+				
+				getValuesService2Cho();
+			}
 		}
 		catch (NumberFormatException ignore) {
 			JOptionPane.showMessageDialog(frame, "Please enter whole numbers as values for each field");

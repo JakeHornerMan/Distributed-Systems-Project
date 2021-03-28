@@ -20,7 +20,7 @@ public class BmiServiceRegistration {
 			String service_type = "_bmi._tcp.local.";	//service-type.domain
 			String service_name = "BMI Services";
 			int service_port = 50052;
-			String service_desc = "BMI Calculation and recommneded actions";
+			String service_desc = "BMI Calculation and recommeneded actions";
 			
 			//register service with ServiceInfo
 			ServiceInfo serviceInfo = ServiceInfo.create(service_type,service_name,service_port,service_desc);
