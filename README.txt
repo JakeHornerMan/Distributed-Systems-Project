@@ -1,0 +1,9 @@
+Please Run:
+BmiServer.java
+BloodpServer.java
+CholesterolServer.java
+BmiServiceRegistration.java
+BloodpServiceRegistration.java
+CholesterolServiceRegistration.java
+Before running:
+HeartDiseaseGUI.java
