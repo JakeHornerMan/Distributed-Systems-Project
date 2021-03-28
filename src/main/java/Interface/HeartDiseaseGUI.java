@@ -159,7 +159,7 @@ public class HeartDiseaseGUI {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Microsoft JhengHei", Font.PLAIN, 11));
-		frame.setBounds(100, 100, 450, 900);
+		frame.setBounds(100, 100, 450, 750);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -185,10 +185,6 @@ public class HeartDiseaseGUI {
 		separator_1 = new JSeparator();
 		separator_1.setBounds(-30, 441, 483, 2);
 		frame.getContentPane().add(separator_1);
-		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(-17, 696, 483, 2);
-		frame.getContentPane().add(separator_2);
 		
 		JLabel lblNewLabel = new JLabel("Height:");
 		lblNewLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 12));
@@ -408,7 +404,7 @@ public class HeartDiseaseGUI {
 		
 		JLabel lblNewLabel_3_1_2_2_1 = new JLabel("Triglycerides:");
 		lblNewLabel_3_1_2_2_1.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
-		lblNewLabel_3_1_2_2_1.setBounds(181, 607, 100, 18);
+		lblNewLabel_3_1_2_2_1.setBounds(181, 607, 100, 23);
 		frame.getContentPane().add(lblNewLabel_3_1_2_2_1);
 		
 		chohdltf = new JTextArea();

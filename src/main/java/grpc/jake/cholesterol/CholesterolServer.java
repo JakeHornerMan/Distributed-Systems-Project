@@ -100,12 +100,10 @@ public class CholesterolServer extends CholesterolImplBase {
 		
 		String anshl = "https://www.cdc.gov/cholesterol/ldl_hdl.htm";
 		
-		if(total< 200 && total != 0|| ldl < 100 && ldl != 0|| hdl >= 60 && hdl != 0|| tri < 150 && tri != 0) {
+		if(total< 200 || ldl < 100|| hdl >= 60|| tri < 150) {
 			anshl = "https://www.cdc.gov/cholesterol/risk_factors.htm";
 		}else if(total > 200 && total != 0|| ldl > 100&&ldl != 0|| hdl <= 60&&hdl != 0|| tri > 150&& tri != 0){
 			anshl = "https://www.cdc.gov/cholesterol/ldl_hdl.htm";
-		}else if(total == 0 || ldl == 0 || hdl == 0 || tri == 0){
-			anshl = "Inavalid: Did not recieve field input";
 		}
 			
 		
